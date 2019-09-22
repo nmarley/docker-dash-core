@@ -1,41 +1,32 @@
-# ruimarinho/bitcoin-core
+# nmarley/dashcore
 
-A bitcoin-core docker image.
+A Dash Core docker image.
 
-[![ruimarinho/bitcoin-core][docker-pulls-image]][docker-hub-url] [![ruimarinho/bitcoin-core][docker-stars-image]][docker-hub-url] [![ruimarinho/bitcoin-core][docker-size-image]][docker-hub-url] [![ruimarinho/bitcoin-core][docker-layers-image]][docker-hub-url]
+[![nmarley/dashcore][docker-pulls-image]][docker-hub-url] [![nmarley/dashcore][docker-stars-image]][docker-hub-url]
 
 ## Tags
 
-- `0.18.1`, `0.18`, `latest` ([0.18/Dockerfile](https://github.com/ruimarinho/docker-bitcoin-core/blob/master/0.18/Dockerfile))
-- `0.18.1-alpine`, `0.18-alpine` ([0.18/alpine/Dockerfile](https://github.com/ruimarinho/docker-bitcoin-core/blob/master/0.18/alpine/Dockerfile))
-
-- `0.17.1`, `0.17` ([0.17/Dockerfile](https://github.com/ruimarinho/docker-bitcoin-core/blob/master/0.17/Dockerfile))
-- `0.17.1-alpine`, `0.17-alpine` ([0.17/alpine/Dockerfile](https://github.com/ruimarinho/docker-bitcoin-core/blob/master/0.17/alpine/Dockerfile))
-
-- `0.16.3`, `0.16` ([0.16/Dockerfile](https://github.com/ruimarinho/docker-bitcoin-core/blob/master/0.16/Dockerfile))
-- `0.16.3-alpine`, `0.16-alpine` ([0.16/alpine/Dockerfile](https://github.com/ruimarinho/docker-bitcoin-core/blob/master/0.16/alpine/Dockerfile))
-
-- `0.15.1`, `0.15` ([0.15/Dockerfile](https://github.com/ruimarinho/docker-bitcoin-core/blob/master/0.15/Dockerfile))
-- `0.15.1-alpine`, `0.15-alpine` ([0.15/alpine/Dockerfile](https://github.com/ruimarinho/docker-bitcoin-core/blob/master/0.15/alpine/Dockerfile))
+- `0.14.1`, `0.14`, `latest` ([0.14/Dockerfile](https://github.com/nmarley/docker-dashcore/blob/master/0.14/Dockerfile))
+- `0.14.1-alpine`, `0.14-alpine` ([0.14/alpine/Dockerfile](https://github.com/nmarley/docker-dashcore/blob/master/0.14/alpine/Dockerfile))
 
 **Picking the right tag**
 
-- `ruimarinho/bitcoin-core:latest`: points to the latest stable release available of Bitcoin Core. Use this only if you know what you're doing as upgrading Bitcoin Core blindly is a risky procedure.
-- `ruimarinho/bitcoin-core:<version>`: based on a slim Debian image, points to a specific version branch or release of Bitcoin Core. Uses the pre-compiled binaries which are fully tested by the Bitcoin Core team.
-- `ruimarinho/bitcoin-core:<version>-alpine`: based on Alpine Linux with Berkeley DB 4.8 (cross-compatible build), points to a specific version branch or release of Bitcoin Core. Uses a simple, resource efficient Linux distribution with security in mind, but is not officially supported by the Bitcoin Core team. Use at your own risk.
+- `nmarley/dashcore:latest`: points to the latest stable release available of Dash Core. Use this only if you know what you're doing as upgrading Dash Core blindly is a risky procedure.
+- `nmarley/dashcore:<version>`: based on a slim Debian image, points to a specific version branch or release of Dash Core. Uses the pre-compiled binaries which are fully tested by the Dash Core team.
+- `nmarley/dashcore:<version>-alpine`: based on Alpine Linux with Berkeley DB 4.8 (cross-compatible build), points to a specific version branch or release of Dash Core. Uses a simple, resource efficient Linux distribution with security in mind, but is not officially supported by the Dash Core team. Use at your own risk.
 
-## What is Bitcoin Core?
+## What is Dash Core?
 
-Bitcoin Core is a reference client that implements the Bitcoin protocol for remote procedure call (RPC) use. It is also the second Bitcoin client in the network's history. Learn more about Bitcoin Core on the [Bitcoin Developer Reference docs](https://bitcoin.org/en/developer-reference).
+Dash Core is a reference client that implements the Dash protocol for remote procedure call (RPC) use. It is also the first Dash client in the network's history. Learn more about Dash Core on the [Dash Developer Reference docs](https://dash-docs.github.io/en/developer-reference).
 
 ## Usage
 
 ### How to use this image
 
-This image contains the main binaries from the Bitcoin Core project - `bitcoind`, `bitcoin-cli` and `bitcoin-tx`. It behaves like a binary, so you can pass any arguments to the image and they will be forwarded to the `bitcoind` binary:
+This image contains the main binaries from the Dash Core project - `dashd`, `dash-cli` and `dash-tx`. It behaves like a binary, so you can pass any arguments to the image and they will be forwarded to the `dashd` binary:
 
 ```sh
-❯ docker run --rm -it ruimarinho/bitcoin-core \
+❯ docker run --rm -it nmarley/dashcore \
   -printtoconsole \
   -regtest=1 \
   -rpcallowip=172.17.0.0/16 \
@@ -44,18 +35,18 @@ This image contains the main binaries from the Bitcoin Core project - `bitcoind`
 
 _Note: [learn more](#using-rpcauth-for-remote-authentication) about how `-rpcauth` works for remote authentication._
 
-By default, `bitcoind` will run as user `bitcoin` for security reasons and with its default data dir (`~/.bitcoin`). If you'd like to customize where `bitcoin-core` stores its data, you must use the `BITCOIN_DATA` environment variable. The directory will be automatically created with the correct permissions for the `bitcoin` user and `bitcoin-core` automatically configured to use it.
+By default, `dashd` will run as user `dash` for security reasons and with its default data dir (`~/.dashcore`). If you'd like to customize where `dashcore` stores its data, you must use the `DASH_DATA` environment variable. The directory will be automatically created with the correct permissions for the `dash` user and `dashcore` automatically configured to use it.
 
 ```sh
-❯ docker run --env BITCOIN_DATA=/var/lib/bitcoin-core --rm -it ruimarinho/bitcoin-core \
+❯ docker run --env DASH_DATA=/var/lib/dashcore --rm -it nmarley/dashcore \
   -printtoconsole \
   -regtest=1
 ```
 
-You can also mount a directory in a volume under `/home/bitcoin/.bitcoin` in case you want to access it on the host:
+You can also mount a directory in a volume under `/home/dash/.dashcore` in case you want to access it on the host:
 
 ```sh
-❯ docker run -v ${PWD}/data:/home/bitcoin/.bitcoin -it --rm ruimarinho/bitcoin-core \
+❯ docker run -v ${PWD}/data:/home/dash/.dashcore -it --rm nmarley/dashcore \
   -printtoconsole \
   -regtest=1
 ```
@@ -63,8 +54,8 @@ You can also mount a directory in a volume under `/home/bitcoin/.bitcoin` in cas
 You can optionally create a service using `docker-compose`:
 
 ```yml
-bitcoin-core:
-  image: ruimarinho/bitcoin-core
+dashcore:
+  image: nmarley/dashcore
   command:
     -printtoconsole
     -regtest=1
@@ -72,26 +63,26 @@ bitcoin-core:
 
 ### Using RPC to interact with the daemon
 
-There are two communications methods to interact with a running Bitcoin Core daemon.
+There are two communications methods to interact with a running Dash Core daemon.
 
-The first one is using a cookie-based local authentication. It doesn't require any special authentication information as running a process locally under the same user that was used to launch the Bitcoin Core daemon allows it to read the cookie file previously generated by the daemon for clients. The downside of this method is that it requires local machine access.
+The first one is using a cookie-based local authentication. It doesn't require any special authentication information as running a process locally under the same user that was used to launch the Dash Core daemon allows it to read the cookie file previously generated by the daemon for clients. The downside of this method is that it requires local machine access.
 
 The second option is making a remote procedure call using a username and password combination. This has the advantage of not requiring local machine access, but in order to keep your credentials safe you should use the newer `rpcauth` authentication mechanism.
 
 #### Using cookie-based local authentication
 
-Start by launch the Bitcoin Core daemon:
+Start by launch the Dash Core daemon:
 
 ```sh
-❯ docker run --rm --name bitcoin-server -it ruimarinho/bitcoin-core \
+❯ docker run --rm --name dash-server -it nmarley/dashcore \
   -printtoconsole \
   -regtest=1
 ```
 
-Then, inside the running `bitcoin-server` container, locally execute the query to the daemon using `bitcoin-cli`:
+Then, inside the running `dash-server` container, locally execute the query to the daemon using `dash-cli`:
 
 ```sh
-❯ docker exec --user bitcoin bitcoin-server bitcoin-cli -regtest getmininginfo
+❯ docker exec --user dash dash-server dash-cli -regtest getmininginfo
 
 {
   "blocks": 0,
@@ -106,20 +97,20 @@ Then, inside the running `bitcoin-server` container, locally execute the query t
 }
 ```
 
-In the background, `bitcoin-cli` read the information automatically from `/home/bitcoin/.bitcoin/regtest/.cookie`. In production, the path would not contain the regtest part.
+In the background, `dash-cli` read the information automatically from `/home/dash/.dashcore/regtest/.cookie`. In production, the path would not contain the regtest part.
 
 #### Using rpcauth for remote authentication
 
-Before setting up remote authentication, you will need to generate the `rpcauth` line that will hold the credentials for the Bitcoind Core daemon. You can either do this yourself by constructing the line with the format `<user>:<salt>$<hash>` or use the official [`rpcauth.py`](https://github.com/bitcoin/bitcoin/blob/master/share/rpcauth/rpcauth.py)  script to generate this line for you, including a random password that is printed to the console.
+Before setting up remote authentication, you will need to generate the `rpcauth` line that will hold the credentials for the Dash Core daemon. You can either do this yourself by constructing the line with the format `<user>:<salt>$<hash>` or use the official [`rpcuser.py`](https://github.com/dashpay/dash/blob/master/share/rpcuser/rpcuser.py) script to generate this line for you, including a random password that is printed to the console.
 
 _Note: This is a Python 3 script. use `[...] | python3 - <username>` when executing on macOS._
 
 Example:
 
 ```sh
-❯ curl -sSL https://raw.githubusercontent.com/bitcoin/bitcoin/master/share/rpcauth/rpcauth.py | python - <username>
+❯ curl -sSL https://raw.githubusercontent.com/dashpay/dash/master/share/rpcuser/rpcuser.py | python - <username>
 
-String to be appended to bitcoin.conf:
+String to be appended to dash.conf:
 rpcauth=foo:7d9ba5ae63c3d4dc30583ff4fe65a67e$9e3634e81c11659e3de036d0bf88f89cd169c1039e6e09607562d54765c649cc
 Your password:
 qDDZdeQ5vw9XXFeVnXT4PZ--tGN2xNjjR4nrtyszZx0=
@@ -127,12 +118,12 @@ qDDZdeQ5vw9XXFeVnXT4PZ--tGN2xNjjR4nrtyszZx0=
 
 Note that for each run, even if the username remains the same, the output will be always different as a new salt and password are generated.
 
-Now that you have your credentials, you need to start the Bitcoin Core daemon with the `-rpcauth` option. Alternatively, you could append the line to a `bitcoin.conf` file and mount it on the container.
+Now that you have your credentials, you need to start the Dash Core daemon with the `-rpcauth` option. Alternatively, you could append the line to a `dash.conf` file and mount it on the container.
 
 Let's opt for the Docker way:
 
 ```sh
-❯ docker run --rm --name bitcoin-server -it ruimarinho/bitcoin-core \
+❯ docker run --rm --name dash-server -it nmarley/dashcore \
   -printtoconsole \
   -regtest=1 \
   -rpcallowip=172.17.0.0/16 \
@@ -144,14 +135,14 @@ Two important notes:
 1. Some shells require escaping the rpcauth line (e.g. zsh), as shown above.
 2. It is now perfectly fine to pass the rpcauth line as a command line argument. Unlike `-rpcpassword`, the content is hashed so even if the arguments would be exposed, they would not allow the attacker to get the actual password.
 
-You can now connect via `bitcoin-cli` or any other [compatible client](https://github.com/ruimarinho/bitcoin-core). You will still have to define a username and password when connecting to the Bitcoin Core RPC server.
+You can now connect via `dash-cli` or any other [compatible client](https://github.com/ruimarinho/bitcoin-core). You will still have to define a username and password when connecting to the Dash Core RPC server.
 
-To avoid any confusion about whether or not a remote call is being made, let's spin up another container to execute `bitcoin-cli` and connect it via the Docker network using the password generated above:
+To avoid any confusion about whether or not a remote call is being made, let's spin up another container to execute `dash-cli` and connect it via the Docker network using the password generated above:
 
 ```sh
-❯ docker run -it --link bitcoin-server --rm ruimarinho/bitcoin-core \
-  bitcoin-cli \
-  -rpcconnect=bitcoin-server \
+❯ docker run -it --link dash-server --rm nmarley/dashcore \
+  dash-cli \
+  -rpcconnect=dash-server \
   -regtest \
   -rpcuser=foo\
   -stdinrpcpass \
@@ -164,23 +155,23 @@ Enter the password `qDDZdeQ5vw9XXFeVnXT4PZ--tGN2xNjjR4nrtyszZx0=` and hit enter:
 0.00000000
 ```
 
-Note: under Bitcoin Core < 0.16, use `-rpcpassword="qDDZdeQ5vw9XXFeVnXT4PZ--tGN2xNjjR4nrtyszZx0="` instead of `-stdinrpcpass`.
+Note: under Dash Core < 0.14.x, (future change to be backported) use `-rpcpassword="qDDZdeQ5vw9XXFeVnXT4PZ--tGN2xNjjR4nrtyszZx0="` instead of `-stdinrpcpass`.
 
 Done!
 
 ### Exposing Ports
 
-Depending on the network (mode) the Bitcoin Core daemon is running as well as the chosen runtime flags, several default ports may be available for mapping.
+Depending on the network (mode) the Dash Core daemon is running as well as the chosen runtime flags, several default ports may be available for mapping.
 
 Ports can be exposed by mapping all of the available ones (using `-P` and based on what `EXPOSE` documents) or individually by adding `-p`. This mode allows assigning a dynamic port on the host (`-p <port>`) or assigning a fixed port `-p <hostPort>:<containerPort>`.
 
-Example for running a node in `regtest` mode mapping JSON-RPC/REST (18443) and P2P (18444) ports:
+Example for running a node in `regtest` mode mapping JSON-RPC/REST (19898) and P2P (19899) ports:
 
 ```sh
 docker run --rm -it \
-  -p 18443:18443 \
-  -p 18444:18444 \
-  ruimarinho/bitcoin-core \
+  -p 19898:19898 \
+  -p 19899:19899 \
+  nmarley/dashcore \
   -printtoconsole \
   -regtest=1 \
   -rpcallowip=172.17.0.0/16 \
@@ -195,46 +186,34 @@ curl --data-binary '{"jsonrpc":"1.0","id":"1","method":"getnetworkinfo","params"
 
 #### Mainnet
 
-- JSON-RPC/REST: 8332
-- P2P: 8333
+- JSON-RPC/REST: 9998
+- P2P: 9999
 
 #### Testnet
 
-- Testnet JSON-RPC: 18332
-- P2P: 18333
+- Testnet JSON-RPC: 19998
+- P2P: 19999
 
 #### Regtest
 
-- JSON-RPC/REST: 18443 (_since 0.16+_, otherwise _18332_)
-- P2P: 18444
+- JSON-RPC/REST: 19898 (_since 0.14.1+_, otherwise _18332_)
+- P2P: 19899 (_since 0.14.1+_, otherwise _19994_)
 
-## Archived tags
+#### Devnet
 
-_Please note that due to [CVE-2018-17144](https://nvd.nist.gov/vuln/detail/CVE-2018-17144), the following tags are unavailable: 0.14.0, 0.14.1, 0.14.2, 0.15.0, 0.15.0.1, 0.15.1, 0.16.0, 0.16.1 and 0.16.2._
-
-For historical reasons, the following tags are still available and automatically updated when the underlying base image (_Alpine Linux_ or _Debian stable_) is updated as well:
-
-- `0.13.2`, `0.13` ([0.13/Dockerfile](https://github.com/ruimarinho/docker-bitcoin-core/blob/master/0.13/Dockerfile))
-- `0.13.2-alpine`, `0.13-alpine` ([0.13/alpine/Dockerfile](https://github.com/ruimarinho/docker-bitcoin-core/blob/master/0.13/alpine/Dockerfile))
-
-- `0.12.1`, `0.12` ([0.12/Dockerfile](https://github.com/ruimarinho/docker-bitcoin-core/blob/master/0.12/Dockerfile))
-- `0.12.1-alpine`, `0.12-alpine` ([0.12/alpine/Dockerfile](https://github.com/ruimarinho/docker-bitcoin-core/blob/master/0.12/alpine/Dockerfile))
-
-- `0.11.2`, `0.11` ([0.11/Dockerfile](https://github.com/ruimarinho/docker-bitcoin-core/blob/master/0.11/Dockerfile))
-- `0.11.2-alpine`, `0.11-alpine` ([0.11/alpine/Dockerfile](https://github.com/ruimarinho/docker-bitcoin-core/blob/master/0.11/alpine/Dockerfile))
+- JSON-RPC/REST: 19798 (_since 0.14.1+_, otherwise _19998_)
+- P2P: 19799 (_since 0.14.1+_, otherwise _19999_)
 
 ## Docker
 
-This image is officially supported on Docker version 17.09, with support for older versions provided on a best-effort basis.
+This image is unofficially supported on Docker version 19.03, with support for all versions provided on a best-effort basis.
 
 ## License
 
-[License information](https://github.com/bitcoin/bitcoin/blob/master/COPYING) for the software contained in this image.
+[License information](https://github.com/dashpay/dash/blob/master/COPYING) for the software contained in this image.
 
-[License information](https://github.com/ruimarinho/docker-bitcoin-core/blob/master/LICENSE) for the [ruimarinho/docker-bitcoin-core][docker-hub-url] docker project.
+[License information](https://github.com/nmarley/docker-dash-core/blob/master/LICENSE) for the [nmarley/docker-dash-core][docker-hub-url] docker project.
 
-[docker-hub-url]: https://hub.docker.com/r/ruimarinho/bitcoin-core
-[docker-layers-image]: https://img.shields.io/imagelayers/layers/ruimarinho/bitcoin-core/latest.svg?style=flat-square
-[docker-pulls-image]: https://img.shields.io/docker/pulls/ruimarinho/bitcoin-core.svg?style=flat-square
-[docker-size-image]: https://img.shields.io/imagelayers/image-size/ruimarinho/bitcoin-core/latest.svg?style=flat-square
-[docker-stars-image]: https://img.shields.io/docker/stars/ruimarinho/bitcoin-core.svg?style=flat-square
+[docker-hub-url]: https://hub.docker.com/r/nmarley/dashcore
+[docker-pulls-image]: https://img.shields.io/docker/pulls/nmarley/dashcore.svg?style=flat-square
+[docker-stars-image]: https://img.shields.io/docker/stars/nmarley/dashcore.svg?style=flat-square
