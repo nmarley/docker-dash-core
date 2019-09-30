@@ -38,7 +38,8 @@ RUN strip $PWD/src/dashd
 
 # Build stage for compiled artifacts
 FROM alpine
-RUN adduser -S dash
+RUN addgroup -S -g 1000 dash && \
+    adduser -S -u 1000 -G dash dash
 RUN sed -i 's/http\:\/\/dl-cdn.alpinelinux.org/https\:\/\/alpine.global.ssl.fastly.net/g' /etc/apk/repositories
 RUN apk --no-cache add \
   su-exec
