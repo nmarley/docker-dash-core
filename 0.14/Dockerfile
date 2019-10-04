@@ -50,6 +50,8 @@ RUN groupadd --gid 1000 dash \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+ENV DASH_DATA=/home/dash/.dashcore
+
 COPY --from=builder /binaries/dashd /usr/local/bin
 COPY --from=builder /binaries/dash-cli /usr/local/bin
 COPY --from=builder /binaries/dash-tx /usr/local/bin
