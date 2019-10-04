@@ -43,7 +43,8 @@ RUN cp dashcore-${DASH_VERSION%.*}/bin/dash-tx /binaries
 # Build stage
 FROM debian:stable-slim
 
-RUN useradd -r dash \
+RUN groupadd --gid 1000 dash \
+  && useradd --system --uid 1000 --gid 1000 dash \
   && apt-get update -y \
   && apt-get install -y gosu \
   && apt-get clean \
