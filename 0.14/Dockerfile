@@ -61,12 +61,6 @@ COPY docker-entrypoint.sh /entrypoint.sh
 VOLUME ["/home/dash/.dashcore"]
 
 EXPOSE 9999 9998 19999 19998 19994 18332
-# new ports 19899 19898 19799 19798
-
-# pre-14.1 regtest = 19994 / 18332
-# 14.1+    regtest = 19899 / 19898
-# pre-14.1  devnet = 19999 / 19998
-# 14.1+     devnet = 19799 / 19798
 
 ENTRYPOINT ["/entrypoint.sh"]
 
