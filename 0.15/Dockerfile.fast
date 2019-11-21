@@ -1,0 +1,47 @@
+# Build stage which extracts binaries from a pre-supplied .tar.gz package.
+#
+# You must vet the binaries yourself (the author of this Dockerfile is a Dash
+# Gitian builder and signer so this is not an issue for me, as I use my own
+# builds which I verify against the other devs' signatures).
+FROM debian:stable-slim as builder
+
+ENV DASH_VERSION=0.15.0.0
+
+WORKDIR /build
+
+ARG DASHCORE_BINARY_PACKAGE=dashcore-0.15.0-x86_64-linux-gnu.tar.gz
+COPY $DASHCORE_BINARY_PACKAGE .
+RUN tar -xzf *.tar.gz
+
+# copy Dash binaries to /binaries
+RUN mkdir /binaries
+RUN cp dashcore-${DASH_VERSION%.*}/bin/dashd /binaries
+RUN cp dashcore-${DASH_VERSION%.*}/bin/dash-cli /binaries
+RUN cp dashcore-${DASH_VERSION%.*}/bin/dash-tx /binaries
+
+
+# Build stage
+FROM debian:stable-slim
+
+RUN groupadd --gid 1000 dash \
+  && useradd --system --uid 1000 --gid 1000 dash \
+  && apt-get update -y \
+  && apt-get install -y gosu \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+ENV DASH_DATA=/home/dash/.dashcore
+
+COPY --from=builder /binaries/dashd /usr/local/bin
+COPY --from=builder /binaries/dash-cli /usr/local/bin
+COPY --from=builder /binaries/dash-tx /usr/local/bin
+
+COPY docker-entrypoint.sh /entrypoint.sh
+
+VOLUME ["/home/dash/.dashcore"]
+
+EXPOSE 9999 9998 19999 19998 19899 19898 19799 19798
+
+ENTRYPOINT ["/entrypoint.sh"]
+
+CMD ["dashd"]
