@@ -87,7 +87,6 @@ Then, inside the running `dash-server` container, locally execute the query to t
 {
   "blocks": 0,
   "currentblocksize": 0,
-  "currentblockweight": 0,
   "currentblocktx": 0,
   "difficulty": 4.656542373906925e-10,
   "errors": "",
@@ -165,12 +164,12 @@ Depending on the network (mode) the Dash Core daemon is running as well as the c
 
 Ports can be exposed by mapping all of the available ones (using `-P` and based on what `EXPOSE` documents) or individually by adding `-p`. This mode allows assigning a dynamic port on the host (`-p <port>`) or assigning a fixed port `-p <hostPort>:<containerPort>`.
 
-Example for running a node in `regtest` mode mapping JSON-RPC/REST (19898) and P2P (19899) ports:
+Example for running a node in `regtest` mode mapping JSON-RPC/REST (18332) and P2P (19994) ports:
 
 ```sh
 docker run --rm -it \
-  -p 19898:19898 \
-  -p 19899:19899 \
+  -p 18332:18332 \
+  -p 19994:19994 \
   nmarley/dashcore \
   -printtoconsole \
   -regtest=1 \
@@ -181,7 +180,7 @@ docker run --rm -it \
 To test that mapping worked, you can send a JSON-RPC curl request to the host port:
 
 ```
-curl --data-binary '{"jsonrpc":"1.0","id":"1","method":"getnetworkinfo","params":[]}' http://foo:qDDZdeQ5vw9XXFeVnXT4PZ--tGN2xNjjR4nrtyszZx0=@127.0.0.1:18443/
+curl --data-binary '{"jsonrpc":"1.0","id":"1","method":"getnetworkinfo","params":[]}' http://foo:qDDZdeQ5vw9XXFeVnXT4PZ--tGN2xNjjR4nrtyszZx0=@127.0.0.1:18332/
 ```
 
 #### Mainnet
@@ -196,13 +195,13 @@ curl --data-binary '{"jsonrpc":"1.0","id":"1","method":"getnetworkinfo","params"
 
 #### Regtest
 
-- JSON-RPC/REST: 19898 (_since 0.14.1+_, otherwise _18332_)
-- P2P: 19899 (_since 0.14.1+_, otherwise _19994_)
+- JSON-RPC/REST: 18332
+- P2P: 19994
 
 #### Devnet
 
-- JSON-RPC/REST: 19798 (_since 0.14.1+_, otherwise _19998_)
-- P2P: 19799 (_since 0.14.1+_, otherwise _19999_)
+- JSON-RPC/REST: 19998
+- P2P: 19999
 
 ## Docker
 
