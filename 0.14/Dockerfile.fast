@@ -5,7 +5,7 @@
 # filename).
 FROM debian:stable-slim as builder
 
-ENV DASH_VERSION=0.14.0.4
+ENV DASH_VERSION=0.14.0.5
 
 WORKDIR /build
 
