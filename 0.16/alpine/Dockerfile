@@ -21,7 +21,7 @@ RUN apk --no-cache --update add \
 
 WORKDIR /build
 
-RUN git clone -b v0.16.0.0 https://github.com/dashpay/dash.git /build
+RUN git clone -b v0.16.0.1 https://github.com/dashpay/dash.git /build
 
 RUN cd depends && make NO_QT=1 -j32
 
