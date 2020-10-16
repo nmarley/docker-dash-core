@@ -15,6 +15,7 @@ RUN apk --no-cache --update add \
     libexecinfo-static \
     libtool \
     make \
+    patch \
     perl \
     pkgconfig \
     python3
