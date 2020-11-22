@@ -5,11 +5,11 @@
 # builds which I verify against the other devs' signatures).
 FROM debian:stable-slim as builder
 
-ENV DASH_VERSION=0.16.0.1
+ENV DASH_VERSION=0.16.1.1
 
 WORKDIR /build
 
-ARG DASHCORE_BINARY_PACKAGE=dashcore-0.16.0-x86_64-linux-gnu.tar.gz
+ARG DASHCORE_BINARY_PACKAGE=dashcore-0.16.1-x86_64-linux-gnu.tar.gz
 COPY $DASHCORE_BINARY_PACKAGE .
 RUN tar -xzf *.tar.gz
 
