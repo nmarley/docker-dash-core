@@ -29,7 +29,7 @@ RUN cd depends && make NO_QT=1 -j32
 RUN sed -i s:sys/fcntl.h:fcntl.h: src/compat.h
 RUN ./autogen.sh
 
-RUN ./configure --prefix=$PWD/depends/x86_64-pc-linux-gnu --without-gui RELDFLAGS="-static --static"
+RUN ./configure --prefix=$PWD/depends/x86_64-pc-linux-gnu --without-gui --disable-stacktraces RELDFLAGS="-static --static"
 
 RUN make -j32
 RUN strip $PWD/src/dash-cli
