@@ -14,6 +14,7 @@ RUN apk --no-cache --update add \
     libexecinfo-dev \
     libexecinfo-static \
     libtool \
+    linux-headers \
     make \
     patch \
     perl \
