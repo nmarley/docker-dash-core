@@ -5,7 +5,7 @@
 # builds which I verify against the other devs' signatures).
 FROM debian:stable-slim as builder
 
-ENV DASH_VERSION=0.17.0.0-rc4
+ENV DASH_VERSION=0.17.0.0-rc5
 
 WORKDIR /build
 
