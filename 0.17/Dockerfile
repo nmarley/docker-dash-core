@@ -25,7 +25,7 @@ RUN set -ex \
     gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" ; \
   done
 
-ENV DASH_VERSION=0.17.0.2
+ENV DASH_VERSION=0.17.0.3
 
 WORKDIR /build
 
